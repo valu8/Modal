@@ -89,32 +89,47 @@ namespace Blazored.Modal
 
         internal async Task DismissInstance(ModalReference modal, ModalResult result)
         {
-            if (modal != null)
+            try
             {
-                await JSRuntime.InvokeVoidAsync("BlazoredModal.deactivateFocusTrap", modal.Id);
-                modal.Dismiss(result);
-                Modals.Remove(modal);
-                await InvokeAsync(StateHasChanged);
+                if (modal != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("BlazoredModal.deactivateFocusTrap", modal.Id);
+                    modal.Dismiss(result);
+                    Modals.Remove(modal);
+                    await InvokeAsync(StateHasChanged);
+                }
             }
+            catch
+            { }
         }
 
         private async void CancelModals(object sender, LocationChangedEventArgs e)
         {
             foreach (var modalReference in Modals.ToList())
             {
-                await JSRuntime.InvokeVoidAsync("BlazoredModal.deactivateFocusTrap", modalReference.Id);
+                try
+                {
+                    await JSRuntime.InvokeVoidAsync("BlazoredModal.deactivateFocusTrap", modalReference.Id);
+                }
+                catch
+                { }
                 modalReference.Dismiss(ModalResult.Cancel());
             }
-
             Modals.Clear();
             await InvokeAsync(StateHasChanged);
+
         }
 
         private async void Update(ModalReference modalReference)
         {
-            await JSRuntime.InvokeVoidAsync("BlazoredModal.activateScrollLock", modalReference.Id);
-            Modals.Add(modalReference);
-            await InvokeAsync(StateHasChanged);
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("BlazoredModal.activateScrollLock", modalReference.Id);
+                Modals.Add(modalReference);
+                await InvokeAsync(StateHasChanged);
+            }
+            catch
+            { }
         }
 
         private ModalReference GetModalReference(Guid Id)
