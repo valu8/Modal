@@ -29,6 +29,7 @@
   <PropertyGroup>
     <!-- File with mtime of last successful npm install -->
     <NpmInstallStampFile>node_modules/.install-stamp</NpmInstallStampFile>
+    <BaseOutputPath>C:\LocalPackages</BaseOutputPath>
   </PropertyGroup>
 
   <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Inputs="package.json" Outputs="$(NpmInstallStampFile)">
